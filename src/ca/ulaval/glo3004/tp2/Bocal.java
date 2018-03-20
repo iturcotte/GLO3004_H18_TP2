@@ -23,19 +23,33 @@ public class Bocal extends Thread {
 	
 	public void requeteValve() {
 		
+		afficherAction("requeteValve");
+		
+		ouvreValve();
 	}
 	
 	public void ouvreValve() {
 		
+		afficherAction("ouvreValve");
+		
+		remplit();
 	}
 	
 	
 	public void remplit() {
 		
+		afficherAction("remplit");
+		
+		fermeValve();
+		
 	} 
 
 	
 	public void fermeValve() {
+		
+		afficherAction("fermeValve");
+		
+		requeteEtiquetage();
 		
 	}
 	
@@ -43,27 +57,43 @@ public class Bocal extends Thread {
 	
 	public void rupture() {
 		
+		afficherAction("rupture");
+		
 	} 
 
 	
 	public void finRupture() {
+		
+		afficherAction("finRupture");
 		
 	}
 	
 	
 	public void requeteEtiquetage() {
 		
+		afficherAction("requeteEtiquetage");
+		
+		commenceEtiquetage();
+		
 	} 
 
 	public void commenceEtiquetage() {
 		
+		afficherAction("commenceEtiquetage");
+		
+		etiquette();
 	} 
 
 	public void etiquette() {
 		
+		afficherAction("etiquette");
+		
+		termineEtiquetage();
 	} 
 
 	public void termineEtiquetage() {
+		
+		afficherAction("termineEtiquetage");
 		
 	}
 	
@@ -73,5 +103,7 @@ public class Bocal extends Thread {
 		return _index + "." + _type;
 	}
 	
-	
+	private void afficherAction(String action) {
+		System.out.println(obtenirNomBocal() + "." + action);
+	}
 }

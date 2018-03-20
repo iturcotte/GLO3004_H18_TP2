@@ -17,7 +17,12 @@ public class Confiturerie {
 				Bocal bocal = new Bocal(s, n);
 				_bocals.add(bocal);
 				
+				// Augmenter la priorite des Bocaux "a"
+				bocal.setPriority(s == "a" ? 2 : 1);
+			
+					
 				bocal.start();
+				bocal.requeteValve();
 			} 
 		}
 		
