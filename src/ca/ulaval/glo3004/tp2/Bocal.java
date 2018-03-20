@@ -2,12 +2,21 @@ package ca.ulaval.glo3004.tp2;
 
 public class Bocal extends Thread {
 
+	private String _type;
+	private int _index;
 	
-	
+	public Bocal(String type, int index) {
+		_type = type;
+		_index = index;
+	}
 	
 	
 	@Override
 	public void run() {
+		
+		System.out.println("Execution : " + obtenirNomBocal());
+		
+	
 		
 	}
 	
@@ -57,5 +66,12 @@ public class Bocal extends Thread {
 	public void termineEtiquetage() {
 		
 	}
+	
+	
+	
+	private String obtenirNomBocal() {
+		return _index + "." + _type;
+	}
+	
 	
 }
