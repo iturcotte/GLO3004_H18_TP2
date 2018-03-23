@@ -19,6 +19,7 @@ public class Bocal extends Thread {
 		
 		System.out.println("Execution : " + obtenirNomBocal());
 		
+		
 		this.requeteValve();
 		
 	}
@@ -26,10 +27,21 @@ public class Bocal extends Thread {
 	
 	public void requeteValve() {
 		
-		afficherAction("requeteValve");
+		synchronized(_cValve.lock) {
 		
-		// Obtenir ressource valve
-		_cValve.requeteValve(_type);
+			try {
+				while(!_cValve.requeteValve(_type)) _cValve.lock.wait();
+				
+				afficherAction("requeteValve");
+				
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		
 			
 		this.ouvreValve();
 		
@@ -38,8 +50,21 @@ public class Bocal extends Thread {
 	
 	public void ouvreValve() {
 		
-		afficherAction("ouvreValve");
+		synchronized(_cValve.lock) {
+			try {
+				while(!_cValve.ouvreValve(_type)) _cValve.lock.wait();
+				
+				afficherAction("ouvreValve");
+				
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		
+		}
+		
+			
 		remplit();
 	}
 	
@@ -48,6 +73,13 @@ public class Bocal extends Thread {
 		
 		afficherAction("remplit");
 		
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		fermeValve();
 		
 	} 
@@ -55,10 +87,24 @@ public class Bocal extends Thread {
 	
 	public void fermeValve() {
 		
+		_cValve.fermeValve(_type); 
 		afficherAction("fermeValve");
+		try {
+			synchronized(_cValve.lock) {
+			
+				_cValve.lock.notifyAll();
+			
+			}
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		requeteEtiquetage();
 		
+		
+		//requeteEtiquetage();
+		this.requeteValve();
 	}
 	
 	

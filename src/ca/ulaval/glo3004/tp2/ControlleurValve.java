@@ -1,43 +1,84 @@
 package ca.ulaval.glo3004.tp2;
 
-import java.util.concurrent.*;
-
 public class ControlleurValve {
 
+	
+	public Object lock = new Object();
+	
 	private int _n;
 	
-	public Semaphore _semMax;
-	public Semaphore _semB;
 	
-	private String _typeCourant = "";
+	private int _na = 0;
+	private int _nb = 0;
+	private int _wa = 0;
+	private int _wb = 0;
+	
+	private int _t = 1;
 	
 	
 	
 	public ControlleurValve(int n) {
 		_n = n;
-		_semMax = new Semaphore(_n);
-		_semB = new Semaphore(0);
-		
 		
 	}
 	
 	
-	public void requeteValve(String type) {
+	public boolean requeteValve(String type) {
 		
-		try {
+		synchronized(lock) {
 			
-			if (_typeCourant == "" || _typeCourant == type) {
-				_typeCourant = type;
-				_semMax.acquire();
-				
-			} else {
-				
+			if (type == "a" && _wa < _n) {
+				_wa += 1;
+				return true;
+			}
+			if (type == "b" && _wb < _n) {
+				_wb += 1;
+				return true;
 			}
 			
+			return false;
+		}
+		
+	}
+	
+	public boolean ouvreValve(String type) {
+		
+		synchronized(lock) {
 			
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			if (type == "a" && _nb == 0 && _na < _n && _wa > 0 && (_wb == 0 || _t == 1)) {
+				_na += 1;
+				_wa -= 1;
+				return true;
+			}
+			if (type == "b" && _na == 0 && _nb < _n && _wb > 0 && (_wa == 0 || _t == 2)) {
+				_nb += 1;
+				_wb -= 1;
+				return true;
+			}
+			
+			return false;
+		}
+		
+	}
+	
+	public boolean fermeValve(String type) {
+		
+		synchronized(lock) {
+			
+			if (type == "a" && _na > 0) {
+				_na -= 1;
+				_t = 2;
+			
+				return true;
+			}
+			if (type == "b" && _nb > 0) {
+				_nb -= 1;
+				_t = 1;
+				
+				return true;
+			}
+			
+			return false;
 		}
 		
 	}
