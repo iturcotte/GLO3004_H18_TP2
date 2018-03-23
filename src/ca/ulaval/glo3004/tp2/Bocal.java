@@ -6,11 +6,13 @@ public class Bocal extends Thread {
 	private int _index;
 	
 	private ControlleurValve _cValve;
+	private ControlleurEtiquetage _cEtiquetage;
 	
-	public Bocal(String type, int index, ControlleurValve cValve) {
+	public Bocal(String type, int index, ControlleurValve cValve, ControlleurEtiquetage cEtiquetage) {
 		_type = type;
 		_index = index;
 		_cValve = cValve;
+		_cEtiquetage = cEtiquetage;
 	}
 	
 	
@@ -125,29 +127,63 @@ public class Bocal extends Thread {
 	
 	public void requeteEtiquetage() {
 		
-		afficherAction("requeteEtiquetage");
 		
+		synchronized(_cEtiquetage.lock) {
+			
+			try {
+				while(!_cEtiquetage.requeteEtiquetage(_type)) _cEtiquetage.lock.wait();
+				
+				afficherAction("requeteEtiquetage");
+				
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		commenceEtiquetage();
 		
 	} 
 
 	public void commenceEtiquetage() {
 		
-		afficherAction("commenceEtiquetage");
-		
+			synchronized(_cEtiquetage.lock) {
+			try {
+				while(!_cEtiquetage.CommenceEtiquetage(_type)) _cEtiquetage.lock.wait();
+				
+				afficherAction("CommenceEtiquetage");
+				
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		etiquette();
+		}
 	} 
 
 	public void etiquette() {
 		
 		afficherAction("etiquette");
 		
-		termineEtiquetage();
+		TermineEtiquetage();
 	} 
 
-	public void termineEtiquetage() {
+	public void TermineEtiquetage() {
 		
-		afficherAction("termineEtiquetage");
+		_cEtiquetage.TermineEtiquetage(_type); 
+		afficherAction("TermineEtiquetage");
+		try {
+			synchronized(_cEtiquetage.lock) {
+			
+				_cEtiquetage.lock.notifyAll();
+			
+			}
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 	
