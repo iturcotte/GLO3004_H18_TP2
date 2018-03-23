@@ -5,9 +5,12 @@ public class Bocal extends Thread {
 	private String _type;
 	private int _index;
 	
-	public Bocal(String type, int index) {
+	private ControlleurValve _cValve;
+	
+	public Bocal(String type, int index, ControlleurValve cValve) {
 		_type = type;
 		_index = index;
+		_cValve = cValve;
 	}
 	
 	
@@ -16,7 +19,7 @@ public class Bocal extends Thread {
 		
 		System.out.println("Execution : " + obtenirNomBocal());
 		
-	
+		this.requeteValve();
 		
 	}
 	
@@ -25,7 +28,12 @@ public class Bocal extends Thread {
 		
 		afficherAction("requeteValve");
 		
-		ouvreValve();
+		// Obtenir ressource valve
+		_cValve.requeteValve(_type);
+			
+		this.ouvreValve();
+		
+		
 	}
 	
 	public void ouvreValve() {

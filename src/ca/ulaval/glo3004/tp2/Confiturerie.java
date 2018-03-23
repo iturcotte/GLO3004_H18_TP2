@@ -11,10 +11,13 @@ public class Confiturerie {
 	
 	public static void main(String[] args) {
 		
+		
+		ControlleurValve cValve = new ControlleurValve(N);
+		
 		for (int n = 0; n < N; n++) {
 			for (String s : S) {
 			   
-				Bocal bocal = new Bocal(s, n);
+				Bocal bocal = new Bocal(s, n, cValve);
 				_bocals.add(bocal);
 				
 				// Augmenter la priorite des Bocaux "a"
@@ -22,7 +25,7 @@ public class Confiturerie {
 			
 					
 				bocal.start();
-				bocal.requeteValve();
+
 			} 
 		}
 		
