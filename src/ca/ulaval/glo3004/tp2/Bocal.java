@@ -19,7 +19,7 @@ public class Bocal extends Thread {
 	@Override
 	public void run() {
 		
-		System.out.println("Execution : " + obtenirNomBocal());
+	//	System.out.println("Execution : " + obtenirNomBocal());
 		
 		
 		this.requeteValve();
@@ -105,8 +105,8 @@ public class Bocal extends Thread {
 		
 		
 		
-		//requeteEtiquetage();
-		this.requeteValve();
+		this.requeteEtiquetage();
+		//this.requeteValve();
 	}
 	
 	
@@ -141,7 +141,7 @@ public class Bocal extends Thread {
 				e.printStackTrace();
 			}
 		}
-		commenceEtiquetage();
+		this.commenceEtiquetage();
 		
 	} 
 
@@ -158,7 +158,7 @@ public class Bocal extends Thread {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		etiquette();
+		this.etiquette();
 		}
 	} 
 
@@ -166,7 +166,7 @@ public class Bocal extends Thread {
 		
 		afficherAction("etiquette");
 		
-		TermineEtiquetage();
+		this.TermineEtiquetage();
 	} 
 
 	public void TermineEtiquetage() {
