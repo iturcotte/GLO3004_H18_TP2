@@ -29,9 +29,11 @@ public class ControlleurEtiquetage {
 	}
 	
 	
-	public boolean requeteEtiquetage(int index, String type) {
+	public boolean requeteEtiquetage(int index, String type) 
+	{
 		
-		synchronized(lock2) {
+		synchronized(lock2) 
+		{
 			
 			if (type == "a" && _wa < _n) {
 				_wa += 1;
@@ -42,9 +44,9 @@ public class ControlleurEtiquetage {
 				return true;
 			}
 			
-			return false;
-		}
 		
+		}
+		return false;
 	}
 	
 	public boolean CommenceEtiquetage(int index, String type) 
@@ -99,10 +101,10 @@ public class ControlleurEtiquetage {
 			       return false;
 			    }
 		    }
-		return false;
-		
-		
+
+
 	}
+		return false;
 }
 	
 	public boolean TermineEtiquetage(int index, String type) 
@@ -150,14 +152,11 @@ public class ControlleurEtiquetage {
 		    	}
 				return true;
 			}
-    		else
-			{
-			    return false;
-			}
+    		
 		  }
-    	return false;
+    	
 		}
-		
+    return false;
 	}
 	
 }

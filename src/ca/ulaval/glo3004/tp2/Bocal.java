@@ -33,7 +33,7 @@ public class Bocal extends Thread {
 		
 			try {
 				while(!_cValve.requeteValve(_index, _type)) _cValve.lock.wait();
-				
+				_cValve.lock.notifyAll();
 				afficherAction("requeteValve");
 				
 				Thread.sleep(500);
@@ -91,7 +91,7 @@ public class Bocal extends Thread {
 				_cValve.lock.notifyAll();
 				afficherAction("fermeValve");
 			}
-	//		Thread.sleep(500);
+			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -128,8 +128,9 @@ public class Bocal extends Thread {
 			
 			try 
 			{
+				
 				while(!_cEtiquetage.requeteEtiquetage(_index, _type)) _cEtiquetage.lock2.wait();
-				_cEtiquetage.lock2.notifyAll();
+	//			_cEtiquetage.lock2.notifyAll();
 				afficherAction("requeteEtiquetage");
 				
 			} 
@@ -139,6 +140,7 @@ public class Bocal extends Thread {
 				e.printStackTrace();
 			}
 		}
+		
 		this.commenceEtiquetage();
 		
 	} 
@@ -177,7 +179,7 @@ public class Bocal extends Thread {
 		{
 			try 
 			{
-				while(!_cEtiquetage.requeteEtiquetage(_index, _type)) _cEtiquetage.lock2.wait();
+				while(!_cEtiquetage.TermineEtiquetage(_index, _type)) _cEtiquetage.lock2.wait();
 				_cEtiquetage.lock2.notifyAll();
 				afficherAction("TermineEtiquetage");
 			}

@@ -32,9 +32,11 @@ public class ControlleurValve {
 	}
 	
 	
-	public boolean requeteValve(int index, String type) {
+	public boolean requeteValve(int index, String type) 
+{
 		
-		synchronized(lock) {
+		synchronized(lock) 
+		{
 			
 			if (type == "a" && _wa < _n) {
 				_wa += 1;
@@ -98,17 +100,14 @@ public class ControlleurValve {
 			    	 }
 			       return true;
 			    }
-			    else
-			    {
-			       return false;
-			    }
+			   
 		    
 			}
 		
-		return false;
+		
 		
 		}	
-	
+		return false;
 }
 	
 	public boolean fermeValve(int index, String type) 
@@ -156,13 +155,11 @@ public class ControlleurValve {
 			    	}
 				    return true;
 			    }
-				else
-				{
-				    return false;
-				}
+				
 			}	
-		return false;
+		
 		}
-   }	
+		return false;
+  }	
 }
 
