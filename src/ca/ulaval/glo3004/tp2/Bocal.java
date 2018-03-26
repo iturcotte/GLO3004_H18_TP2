@@ -130,7 +130,7 @@ public class Bocal extends Thread {
 			{
 				
 				while(!_cEtiquetage.requeteEtiquetage(_index, _type)) _cEtiquetage.lock2.wait();
-	//			_cEtiquetage.lock2.notifyAll();
+				_cEtiquetage.lock2.notifyAll();
 				afficherAction("requeteEtiquetage");
 				
 			} 
