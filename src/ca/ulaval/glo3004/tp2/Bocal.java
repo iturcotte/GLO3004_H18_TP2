@@ -98,9 +98,9 @@ public class Bocal extends Thread {
 		}
 		
 		
-	return;	
-//		this.requeteEtiquetage();
-//		this.ouvreValve();
+	
+		this.requeteEtiquetage();
+
 	}
 	
 	
@@ -119,18 +119,22 @@ public class Bocal extends Thread {
 	}
 	
 	
-	public void requeteEtiquetage() {
+	public void requeteEtiquetage() 
+	{
 		
 		
-		synchronized(_cEtiquetage.lock) {
+		synchronized(_cEtiquetage.lock2) 
+		{
 			
-			try {
-				while(!_cEtiquetage.requeteEtiquetage(_type)) _cEtiquetage.lock.wait();
-				
+			try 
+			{
+				while(!_cEtiquetage.requeteEtiquetage(_index, _type)) _cEtiquetage.lock2.wait();
+				_cEtiquetage.lock2.notifyAll();
 				afficherAction("requeteEtiquetage");
 				
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
+			} 
+			catch (InterruptedException e) 
+			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -139,20 +143,24 @@ public class Bocal extends Thread {
 		
 	} 
 
-	public void commenceEtiquetage() {
+	public void commenceEtiquetage() 
+	{
 		
-			synchronized(_cEtiquetage.lock) {
-			try {
-				while(!_cEtiquetage.CommenceEtiquetage(_type)) _cEtiquetage.lock.wait();
-				
+		synchronized(_cEtiquetage.lock2) 
+		{
+				try 
+				{
+				while(!_cEtiquetage.CommenceEtiquetage(_index, _type)) _cEtiquetage.lock2.wait();
+				_cEtiquetage.lock2.notifyAll();
 				afficherAction("CommenceEtiquetage");
-				
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
+  			    } 
+			
+			    catch (InterruptedException e) 
+			    {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
-		this.etiquette();
+			    }
+		   this.etiquette();
 		}
 	} 
 
@@ -163,25 +171,25 @@ public class Bocal extends Thread {
 		this.TermineEtiquetage();
 	} 
 
-	public void TermineEtiquetage() {
-		
-		_cEtiquetage.TermineEtiquetage(_type); 
-		afficherAction("TermineEtiquetage");
-		try {
-			synchronized(_cEtiquetage.lock) {
-			
-				_cEtiquetage.lock.notifyAll();
-			
+	public void TermineEtiquetage() 
+	{
+		synchronized(_cEtiquetage.lock2) 
+		{
+			try 
+			{
+				while(!_cEtiquetage.requeteEtiquetage(_index, _type)) _cEtiquetage.lock2.wait();
+				_cEtiquetage.lock2.notifyAll();
+				afficherAction("TermineEtiquetage");
 			}
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			
+			catch (InterruptedException e) 
 		
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
-	
-	
 	
 	private String obtenirNomBocal() {
 		return _index + "." + _type;
