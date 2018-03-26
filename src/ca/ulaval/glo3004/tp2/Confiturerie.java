@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Confiturerie {
 
 	private static String[] S = {"a", "b"};
-	private static int N = 2;
+	public static int N = 2;
 	
 	private static ArrayList<Bocal> _bocals = new ArrayList<Bocal>();
 	

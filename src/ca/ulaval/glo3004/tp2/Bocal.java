@@ -32,7 +32,7 @@ public class Bocal extends Thread {
 		synchronized(_cValve.lock) {
 		
 			try {
-				while(!_cValve.requeteValve(_type)) _cValve.lock.wait();
+				while(!_cValve.requeteValve(_index, _type)) _cValve.lock.wait();
 				
 				afficherAction("requeteValve");
 				
@@ -54,11 +54,11 @@ public class Bocal extends Thread {
 		
 		synchronized(_cValve.lock) {
 			try {
-				while(!_cValve.ouvreValve(_type)) _cValve.lock.wait();
-				
+				while(!_cValve.ouvreValve(_index, _type)) _cValve.lock.wait();
+				_cValve.lock.notifyAll();
 				afficherAction("ouvreValve");
 				
-				Thread.sleep(500);
+	//			Thread.sleep(500);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -89,7 +89,7 @@ public class Bocal extends Thread {
 	
 	public void fermeValve() {
 		
-		_cValve.fermeValve(_type); 
+		_cValve.fermeValve(_index, _type); 
 		afficherAction("fermeValve");
 		try {
 			synchronized(_cValve.lock) {
