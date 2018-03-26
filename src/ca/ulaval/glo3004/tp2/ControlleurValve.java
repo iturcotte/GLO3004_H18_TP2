@@ -4,6 +4,7 @@ public class ControlleurValve {
 
 	
 	public Object lock = new Object();
+	public Object lock2 = new Object();
 	
 	private int _n;
 	
@@ -66,7 +67,8 @@ public class ControlleurValve {
 				    	}
 				    else 
 				    	{
-   			    	      _index_courant_ferme_valve = 1;
+   			   // 	      _index_courant_ouvre_valve = 1;
+				    	  _index_courant_ferme_valve = 1;
 				    	  _type_courant_ferme_valve = "a";
 				    	}
  				    return true;
@@ -92,6 +94,7 @@ public class ControlleurValve {
 			       else 
 			    	 {
 			
+			    	   _index_courant_ouvre_valve = 1;
 			    	   _index_courant_ferme_valve = 1;
 			    	   _type_courant_ferme_valve = "b";
 			    	 }
@@ -124,7 +127,8 @@ public class ControlleurValve {
 			        }
 			        else 
 			    	{
-			          _index_courant_ouvre_valve = 1;
+			          _index_courant_ferme_valve = 1 ;
+			          _index_courant_ouvre_valve += 1;
 				      _type_courant_ouvre_valve = "b";
 			    	}
 			    	return true;
@@ -148,7 +152,8 @@ public class ControlleurValve {
 			        }
 			        else 
 			    	{
-			    	  _index_courant_ouvre_valve += 1;
+			          _index_courant_ferme_valve = 1 ;
+			          _index_courant_ouvre_valve += 1;
 			    	  _type_courant_ouvre_valve = "a";
 			    	}
 				    return true;

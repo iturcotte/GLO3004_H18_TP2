@@ -75,29 +75,23 @@ public class Bocal extends Thread {
 		
 		afficherAction("remplit");
 		
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		fermeValve();
+		this.fermeValve();
 		
 	} 
 
 	
 	public void fermeValve() {
 		
-		_cValve.fermeValve(_index, _type); 
-		afficherAction("fermeValve");
+	
+		
 		try {
 			synchronized(_cValve.lock) {
-			
+		
+				while(!_cValve.fermeValve(_index, _type)) _cValve.lock.wait();
 				_cValve.lock.notifyAll();
-			
+				afficherAction("fermeValve");
 			}
-			Thread.sleep(500);
+	//		Thread.sleep(500);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -105,7 +99,7 @@ public class Bocal extends Thread {
 		
 		
 		
-		this.requeteEtiquetage();
+//		this.requeteEtiquetage();
 		//this.requeteValve();
 	}
 	
