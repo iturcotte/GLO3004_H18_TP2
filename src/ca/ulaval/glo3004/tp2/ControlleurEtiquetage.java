@@ -105,24 +105,57 @@ public class ControlleurEtiquetage {
 	}
 }
 	
-	public boolean TermineEtiquetage(int index, String type) {
+	public boolean TermineEtiquetage(int index, String type) 
+{
 		
-		synchronized(lock2) {
+    synchronized(lock2) 
+	{
 			
-			if (type == "a" && _na > 0) {
+    	if (type == _type_courant_termine_etiquetage && index == _index_courant_termine_etiquetage) 
+		{
+    		if (type == "a" && _na > 0) 
+    		{
+		
 				_na -= 1;
 				_t = 2;
-			
+				if (_index_courant_termine_etiquetage < Confiturerie.N) 
+		        {
+		          _index_courant_termine_etiquetage +=1; 
+		        }
+		        else 
+		    	{
+		          _index_courant_termine_etiquetage = 1 ;
+		          _index_courant_commence_etiquetage = 1;
+			      _type_courant_commence_etiquetage = "b";
+		    	}
 				return true;
-			}
-			if (type == "b" && _nb > 0) {
+		
+    		}
+		}
+    		
+    	if (type == _type_courant_termine_etiquetage && index == _index_courant_termine_etiquetage) 
+		{	
+    		if (type == "b" && _nb > 0) {
 				_nb -= 1;
 				_t = 1;
-				
+				if (_index_courant_termine_etiquetage < Confiturerie.N) 
+		        {
+		          _index_courant_termine_etiquetage +=1; 
+		        }
+		        else 
+		    	{
+		          _index_courant_termine_etiquetage = 1 ;
+		          _index_courant_commence_etiquetage += 1;
+		    	  _type_courant_commence_etiquetage = "a";
+		    	}
 				return true;
 			}
-			
-			return false;
+    		else
+			{
+			    return false;
+			}
+		  }
+    	return false;
 		}
 		
 	}
