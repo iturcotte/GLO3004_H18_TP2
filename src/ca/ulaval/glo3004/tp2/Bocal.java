@@ -67,7 +67,7 @@ public class Bocal extends Thread {
 		}
 		
 			
-		remplit();
+		this.remplit();
 	}
 	
 	
@@ -98,9 +98,9 @@ public class Bocal extends Thread {
 		}
 		
 		
-		
+	return;	
 //		this.requeteEtiquetage();
-		//this.requeteValve();
+//		this.ouvreValve();
 	}
 	
 	
