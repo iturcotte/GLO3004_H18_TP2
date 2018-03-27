@@ -1,6 +1,8 @@
 package ca.ulaval.glo3004.tp2;
 
 import java.util.ArrayList;
+import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.BrokenBarrierException;
 
 public class Confiturerie {
 
@@ -15,14 +17,17 @@ public class Confiturerie {
 		ControlleurValve cValve = new ControlleurValve(N);
 		ControlleurEtiquetage cEtiquetage = new ControlleurEtiquetage(N);
 		
+		CyclicBarrier b = new CyclicBarrier(4);
+	
+		for (String s : S) {
 		for (int n = 1; n <= N; n++) {
-			for (String s : S) {
+			
 			   
-				Bocal bocal = new Bocal(s, n, cValve, cEtiquetage);
+				Bocal bocal = new Bocal(s, n, cValve, cEtiquetage, b);
 				_bocals.add(bocal);
 				
 				// Augmenter la priorite des Bocaux "a"
-				bocal.setPriority(s == "a" ? 2 : 1);
+				//bocal.setPriority(s == "a" ? 2 : 1);
 			
 					
 				bocal.start();

@@ -70,7 +70,7 @@ public class ControlleurValve {
 				    else 
 				    	{
    		
-				    	  _index_courant_ferme_valve = 1;
+				    	  //_index_courant_ferme_valve = 1;
 				    	  _type_courant_ferme_valve = "a";
 				
 				    	}
@@ -95,7 +95,7 @@ public class ControlleurValve {
 			    	 {
 			
 			    	   _index_courant_ouvre_valve = 1;
-			    	   _index_courant_ferme_valve = 1;
+			    	   //_index_courant_ferme_valve = 1;
 			    	   _type_courant_ferme_valve = "b";
 			    	 }
 			       return true;
@@ -117,7 +117,7 @@ public class ControlleurValve {
 		{
 			if (type == _type_courant_ferme_valve && index == _index_courant_ferme_valve) 
 			{
-				if (type == "a" && _na > 0) 
+				if (type == "a" && _na > 0 && _wa == 0) 
 				{
 		     		_na -= 1;
 			    	_t = 2;
@@ -130,6 +130,7 @@ public class ControlleurValve {
 			          _index_courant_ferme_valve = 1 ;
 			          _index_courant_ouvre_valve = 1;
 				      _type_courant_ouvre_valve = "b";
+				      _type_courant_ferme_valve = "b";
 			    	}
 			    	return true;
 				}
