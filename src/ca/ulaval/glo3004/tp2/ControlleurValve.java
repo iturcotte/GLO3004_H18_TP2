@@ -1,168 +1,85 @@
 package ca.ulaval.glo3004.tp2;
 
 public class ControlleurValve {
-
-	
-	public Object lock = new Object();
-	
-	
-	private int _n;
-	
-	
-	private int _na = 0;
-	private int _nb = 0;
-	private int _wa = 0;
-	private int _wb = 0;
-	
-	private int _t = 1;
-	
-	private String _type_initial = "a";
-	private String _type_courant_ouvre_valve = _type_initial;
-	private String _type_courant_ferme_valve = "a";
-	private int _index_initial = 1;
-
-	private int _index_courant_ouvre_valve = _index_initial;
-	private int _index_courant_ferme_valve = 1;
-   
+	private int max_concurrent;
+	private int n;
+	private int compteur_ouvre = 0;
+	private int na = 0;
+	private int nb = 0;
+	private int wa = 0;
+	private int wb = 0;
+	private int index_courant_ouvre_valve_a = 1;
+	private int index_courant_ouvre_valve_b = 1;
+	private int index_courant_ferme_valve_a = 1;
+	private int index_courant_ferme_valve_b = 1;
+	private String t = "a";
     
-	
-	public ControlleurValve(int n) {
-		_n = n;
-		
+	public ControlleurValve(int _max_concurrent, int _n) {
+		n = _n;
+		max_concurrent = _max_concurrent;
 	}
 	
 	
-	public boolean requeteValve(int index, String type) {
-		
-		synchronized(lock) {
-			
-			if (type == "a" && _wa < _n) {
-				_wa += 1;
-				return true;
-			}
-			if (type == "b" && _wb < _n) {
-				_wb += 1;
-				return true;
-			}
-			
+	public synchronized boolean requeteValve(int index, String type) {	
+		if (type == "a" && wa < n) {
+			wa += 1;
+			afficherAction(index, type, "requeteValve");
+			return true;
+		}
+		if (type == "b" && wb < n) {
+			afficherAction(index, type, "requeteValve");
+			wb += 1;
+			return true;
+		}
+	
+		return false;
+	}
+	
+	public synchronized boolean ouvreValve(int index, String type) {
+		if (compteur_ouvre == max_concurrent) {
 			return false;
 		}
-		
+	    if (type == "a" && index == index_courant_ouvre_valve_a && nb == 0 && na < n && wa > 0 && (wb == 0 || t == "a")) {
+			na += 1;
+			wa -= 1;
+			compteur_ouvre++;
+			index_courant_ouvre_valve_a = (index_courant_ouvre_valve_a%n)+1;
+			afficherAction(index, type, "ouvreValve");
+		    return true;
+		} else if (type == "b" && index == index_courant_ouvre_valve_b && na == 0 && nb < n && wb > 0 && (wa == 0 || t == "b")) {
+	    	nb += 1;
+	    	wb -= 1;
+	    	compteur_ouvre++;
+	    	index_courant_ouvre_valve_b = (index_courant_ouvre_valve_b%n)+1;
+	    	afficherAction(index, type, "ouvreValve");
+	    	return true;
+	    } else {
+		   return false;
+	    }
 	}
 	
-	public boolean ouvreValve(int index, String type) 
-{
-		
-		synchronized(lock) 
-		{
-			if (type == _type_courant_ouvre_valve && index == _index_courant_ouvre_valve) 
-			{
-			   if (type == "a" && _nb == 0 && _na < _n && _wa > 0 && (_wb == 0 || _t == 1)) 
-			      {
-					_na += 1;
-					_wa -= 1;
-				    if (_index_courant_ouvre_valve < Confiturerie.N) 
-				        {
-				     	  _index_courant_ouvre_valve +=1; 
-				    	}
-				    else 
-				    	{
-   		
-				    	  _index_courant_ferme_valve = 1;
-				    	  _type_courant_ferme_valve = "a";
-				
-				    	}
- 				    return true;
-				  }
-				
-		
-		    }
-		
-	
-			if (type == _type_courant_ouvre_valve && index == _index_courant_ouvre_valve) 
-			{
-			    if (type == "b" && _na == 0 && _nb < _n && _wb > 0 && (_wa == 0 || _t == 2)) 
-			    {
-				   _nb += 1;
-				   _wb -= 1;
-				   if (_index_courant_ouvre_valve < Confiturerie.N) 
-			         {
-			     	   _index_courant_ouvre_valve +=1; 
-			    	 }
-			       else 
-			    	 {
-			
-			    	   _index_courant_ouvre_valve = 1;
-			    	   _index_courant_ferme_valve = 1;
-			    	   _type_courant_ferme_valve = "b";
-			    	 }
-			       return true;
-			    }
-			    else
-			    {
-			       return false;
-			    }
-		    
-			}
-		
-		return false;
-		
-		}	
-	
-}
-	
-	public boolean fermeValve(int index, String type) 
-{
-		
-		synchronized(lock) 
-		{
-			if (type == _type_courant_ferme_valve && index == _index_courant_ferme_valve) 
-			{
-				if (type == "a" && _na > 0) 
-				{
-		     		_na -= 1;
-			    	_t = 2;
-			    	if (_index_courant_ferme_valve < Confiturerie.N) 
-			        {
-			          _index_courant_ferme_valve +=1; 
-			        }
-			        else 
-			    	{
-			          _index_courant_ferme_valve = 1 ;
-			          _index_courant_ouvre_valve = 1;
-				      _type_courant_ouvre_valve = "b";
-			    	}
-			    	return true;
-				}
-			    
-			   	    
-			}
-						
-			if (type == _type_courant_ferme_valve && index == _index_courant_ferme_valve) 
-			{
-				if (type == "b" && _nb > 0) 
-			    {
-				  _nb -= 1;
-				   _t = 1;
-				   if (_index_courant_ferme_valve < Confiturerie.N) 
-			        {
-			          _index_courant_ferme_valve +=1; 
-			        }
-			        else 
-			    	{
-			          _index_courant_ferme_valve = 1 ;
-			          _index_courant_ouvre_valve += 1;
-			    	  _type_courant_ouvre_valve = "a";
-			    	}
-				    return true;
-			    }
-				else
-				{
-				    return false;
-				}
-			}	
-		return false;
+	public synchronized boolean fermeValve(int index, String type) {
+		if (type == "a" && index == index_courant_ferme_valve_a && na > 0) {
+     		na -= 1;
+	    	t = "b";
+	    	compteur_ouvre--;
+	    	index_courant_ferme_valve_a = (index_courant_ferme_valve_a%n)+1;
+	    	afficherAction(index, type, "fermeValve");
+	    	return true;
+		} else if (type == "b" && index == index_courant_ferme_valve_b && nb > 0) {
+			nb -= 1;
+			t = "a";
+			compteur_ouvre--;
+			index_courant_ferme_valve_b = (index_courant_ferme_valve_b%n)+1;
+			afficherAction(index, type, "fermeValve");
+		    return true;
+	    } else {
+		    return false;
 		}
-   }	
+   }
+	
+	private void afficherAction(int index, String type, String action) {
+		System.out.println(index + "." + type + "." + action);
+	}
 }
 
